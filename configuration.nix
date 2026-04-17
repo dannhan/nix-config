@@ -44,15 +44,19 @@
 
   # Enable the X11 windowing system.
   services = {
-    xserver.enable = true;
-    # xserver.windowManager.xmonad.enable = true;
-    xserver.windowManager.i3.enable = true;
+    autorandr.enable = true;
+    displayManager.sddm.enable = true;
+    xserver = {
+      enable = true;
+      windowManager.i3.enable = true;
+      windowManager.xmonad.enable = true;
+    };
   };
   
 
   # Configure keymap in X11
-  # services.xserver.xkb.layout = "us";
-  # services.xserver.xkb.options = "eurosign:e,caps:escape";
+  services.xserver.xkb.layout = "us";
+  services.xserver.xkb.options = "eurosign:e,caps:escape";
 
   # Enable CUPS to print documents.
   # services.printing.enable = true;
@@ -74,6 +78,7 @@
     extraGroups = [ "wheel" "networkmanager" ]; # Enable ‘sudo’ for the user.
     packages = with pkgs; [
       dmenu
+      fzf
       qutebrowser
       tree
       xclip
