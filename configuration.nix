@@ -10,6 +10,8 @@
       ./hardware-configuration.nix
     ];
 
+  hardware.bluetooth.enable = true;
+
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -36,10 +38,11 @@
   };
 
   # Enable the X11 windowing system.
-  services.xserver.enable = true;
-
-  services.xserver.windowManager.xmonad.enable = true;
-
+  services = {
+    xserver.enable = true;
+    # xserver.windowManager.xmonad.enable = true;
+    xserver.windowManager.i3.enable = true;
+  };
   
 
   # Configure keymap in X11
@@ -73,7 +76,11 @@
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
+  nixpkgs.config.allowUnfree = true;
+
   # programs.firefox.enable = true;
+
+  programs.steam.enable = true;
 
   programs.git = {
     config.user = {
