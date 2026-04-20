@@ -38,21 +38,15 @@
   console = {
     font = "ter-v32n";
     keyMap = "us";
-  #   useXkbConfig = true; # use xkb.options in tty.
+    # useXkbConfig = true; # use xkb.options in tty.
     packages = with pkgs; [ terminus_font ];
   };
 
   # Enable the X11 windowing system.
   services = {
-    autorandr.enable = true;
     displayManager.sddm.enable = true;
-    xserver = {
-      enable = true;
-      windowManager.i3.enable = true;
-      windowManager.xmonad.enable = true;
-    };
+    xserver.enable = true;
   };
-  
 
   # Configure keymap in X11
   services.xserver.xkb.layout = "us";
@@ -72,33 +66,17 @@
   # Enable touchpad support (enabled default in most desktopManager).
   # services.libinput.enable = true;
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
+  # Define a user account.
   users.users.ruyam = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" ]; # Enable ‘sudo’ for the user.
-    packages = with pkgs; [
-      dmenu
-      fzf
-      qutebrowser
-      tree
-      xclip
-    ];
+    extraGroups = [ "wheel" "networkmanager" ];
   };
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
-  nixpkgs.config.allowUnfree = true;
-
-  # programs.firefox.enable = true;
-
-  programs.steam.enable = true;
-
-  programs.git = {
-    config.user = {
-      name = "Ahmad Danun Hanani";
-      email = "ahmadanun1@gmail.com";
-    };
-  };
+  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
+    "steam" "steam-original" "steam-runtime" "steam-run" "steam-unwrapped"
+  ];
 
   # List packages installed in system profile.
   # You can use https://search.nixos.org/ to find more packages (and options).
@@ -108,6 +86,8 @@
     git
     tmux
   ];
+
+  programs.steam.enable = true;
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
