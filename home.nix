@@ -1,16 +1,29 @@
-{ config, pkgs, lib, ... }:
+{ inputs, config, pkgs, lib, ... }:
 
 {
+  imports = [
+    inputs.noctalia.homeModules.default
+  ];
+
   home.username = "ruyam";
   home.homeDirectory = "/home/ruyam";
 
   # Packages that should be installed to the user profile.
   home.packages = with pkgs; [
     btop
-    dmenu
     tree
-    xclip
+    lazygit
   ];
+
+  programs.alacritty = {
+    enable = true;
+    settings = {
+      font = {
+        normal.family = "Kode Mono";
+        size = 12;
+      };
+    };
+  };
 
   programs.fzf = {
     enable = true;
@@ -34,6 +47,12 @@
     '';
   };
 
+  programs.tmux = {
+    enable = true;
+    mouse = true;
+    keyMode = "vi";
+  };
+
   programs.qutebrowser = {
     enable = true;
     extraConfig = ''
@@ -43,11 +62,11 @@
     '';
   };
 
-  xsession.windowManager.xmonad = {
+  programs.noctalia-shell = {
     enable = true;
-    enableContribAndExtras = true;
-    # config = "${dotfiles}/xmonad.hs";
   };
+
+  xdg.configFile."niri/config.kdl".source = ./dotfiles/niri.kdl;
 
   # This value determines the home Manager release that your
   # configuration is compatible with. This helps avoid breakage

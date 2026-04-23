@@ -42,15 +42,11 @@
     packages = with pkgs; [ terminus_font ];
   };
 
-  # Enable the X11 windowing system.
+  # Enable sddm
   services = {
     displayManager.sddm.enable = true;
-    xserver.enable = true;
+    displayManager.sddm.wayland.enable = true;
   };
-
-  # Configure keymap in X11
-  services.xserver.xkb.layout = "us";
-  services.xserver.xkb.options = "eurosign:e,caps:escape";
 
   # Enable CUPS to print documents.
   # services.printing.enable = true;
@@ -85,9 +81,39 @@
     wget
     git
     tmux
+
+    niri
+    xwayland-satellite
   ];
 
-  programs.steam.enable = true;
+  fonts.packages = with pkgs; [
+    noto-fonts
+    noto-fonts-cjk-sans
+    noto-fonts-color-emoji
+    liberation_ttf
+    fira-code
+    fira-code-symbols
+    mplus-outline-fonts.githubRelease
+    dina-font
+    proggyfonts
+    kode-mono
+    jetbrains-mono
+  ];
+
+  programs.niri.enable = true;
+  programs.steam = {
+   enable = true;
+   remotePlay.openFirewall = true;
+   dedicatedServer.openFirewall = true;
+   localNetworkGameTransfers.openFirewall = true;
+  };
+
+  xdg.portal = {
+    enable = true;
+    xdgOpenUsePortal = true;
+    config.common.default = "*";
+    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+  };
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -98,9 +124,17 @@
   # };
 
   # List services that you want to enable:
+  services = {
+    # Enable the OpenSSH daemon.
+    # openssh.enable = true;
 
-  # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
+    # Enable power-profile
+    power-profiles-daemon.enable = true;
+
+    # Enable battery monitoring
+    upower.enable = true;
+  };
+
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
