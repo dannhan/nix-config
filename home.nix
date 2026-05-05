@@ -3,10 +3,29 @@
 {
   imports = [
     inputs.noctalia.homeModules.default
+    inputs.nixvim.homeModules.default
   ];
 
   home.username = "ruyam";
   home.homeDirectory = "/home/ruyam";
+
+  xdg.userDirs = {
+    enable = true;
+    createDirectories = true;
+
+    # Standard overrides
+    desktop = config.home.homeDirectory;
+    download = "${config.home.homeDirectory}/downloads";
+    documents = "${config.home.homeDirectory}/docs";
+    pictures = "${config.home.homeDirectory}/media/pictures";
+    videos = "${config.home.homeDirectory}/media/videos";
+    music = "${config.home.homeDirectory}/media/musics";
+
+    # Note: Setting a directory to null will often "disable" it 
+    # or prevent it from being created.
+    publicShare = null;
+    templates = null;
+  };
 
   # Packages that should be installed to the user profile.
   home.packages = with pkgs; [
@@ -40,11 +59,19 @@
 
   programs.neovim = {
     enable = true;
-    extraConfig = ''
-      set number relativenumber
-      set expandtab shiftwidth=2
-      color wildcharm
-    '';
+  };
+
+  programs.nixvim = {
+    enable = true;
+    opts =  {
+      number = true;
+      relativenumber = true;
+
+      expandtab = true;
+      shiftwidth = 2;
+    };
+
+    colorscheme = "wildcharm";
   };
 
   programs.tmux = {
