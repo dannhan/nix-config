@@ -16,11 +16,6 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "nixos"; # Define your hostname.
-
-  # Configure network connections interactively with nmcli or nmtui.
-  networking.networkmanager.enable = true;
-
   # Set your time zone.
   time.timeZone = "Asia/Jakarta";
 
@@ -29,14 +24,18 @@
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
   networking = {
-    nameservers = [ "1.1.1.1" "8.8.8.8" "9.9.9.9" ];
-    networkmanager.dns = "none";
+    hostName = "nixos"; # Define your hostname.
+    networkmanager = {
+      enable = true;
+      dns = "none";
+    };
+    nameservers = ["1.1.1.1" "8.8.8.8" "9.9.9.9" ];
   };
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
   console = {
-    font = "ter-v32n";
+    # font = "ter-v32n";
     keyMap = "us";
     # useXkbConfig = true; # use xkb.options in tty.
     packages = with pkgs; [ terminus_font ];
@@ -82,6 +81,7 @@
     git
     tmux
 
+    home-manager
     niri
     xwayland-satellite
   ];
@@ -101,12 +101,19 @@
   ];
 
   programs.niri.enable = true;
+  programs.nix-ld.enable = true;
   programs.steam = {
    enable = true;
    remotePlay.openFirewall = true;
    dedicatedServer.openFirewall = true;
    localNetworkGameTransfers.openFirewall = true;
   };
+
+  programs.nix-ld.libraries = with pkgs; [
+    stdenv.cc.cc.lib
+    zlib
+    openssl
+  ];
 
   xdg.portal = {
     enable = true;

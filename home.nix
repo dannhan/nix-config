@@ -3,7 +3,8 @@
 {
   imports = [
     inputs.noctalia.homeModules.default
-    inputs.nixvim.homeModules.default
+
+    ./modules/nixvim.nix
   ];
 
   home.username = "ruyam";
@@ -32,6 +33,13 @@
     btop
     tree
     lazygit
+    hledger
+    nodejs
+
+    ripgrep
+    platformio
+
+    telegram-desktop
   ];
 
   programs.alacritty = {
@@ -41,6 +49,43 @@
         normal.family = "Kode Mono";
         size = 12;
       };
+    };
+  };
+
+  programs.bash = {
+    enable = true;
+
+    historySize = 100000;
+    historyFileSize = 100000;
+    historyControl = [ "ignoredups" "ignorespace" ];
+    historyIgnore = [ "clear" "pwd" "ls" "history" "exit" "cd *" ];
+
+    shellOptions = [ "histappend" ];
+
+    initExtra = ''
+      export HISTTIMEFORMAT="%F %T "
+      PROMPT_COMMAND='history -a'
+
+      export NPM_CONFIG_PREFIX="$HOME/.npm-packages"
+      export PATH="$HOME/.npm-packages/bin:$PATH"
+      export NODE_PATH="$HOME/.npm-packages/lib/node_modules"
+    '';
+  };
+
+  programs.firefox = {
+    enable = true;
+    profiles.default = {
+      id = 0;
+      settings = {
+        "app.update.auto" = false;
+        "browser.startup.homepage" = "https://lobste.rs";
+        "browser.urlbar.placeholderName" = "DuckDuckGo";
+        "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
+      };
+      extensions.packages = with inputs.firefox-addons.packages.${pkgs.stdenv.hostPlatform.system}; [
+        ublock-origin
+        vimium
+      ];
     };
   };
 
@@ -57,27 +102,31 @@
     };
   };
 
-  programs.neovim = {
+  programs.noctalia-shell = {
     enable = true;
   };
 
-  programs.nixvim = {
+  programs.opencode = {
     enable = true;
-    opts =  {
-      number = true;
-      relativenumber = true;
-
-      expandtab = true;
-      shiftwidth = 2;
-    };
-
-    colorscheme = "wildcharm";
   };
 
   programs.tmux = {
     enable = true;
     mouse = true;
     keyMode = "vi";
+    baseIndex = 1;
+
+    terminal = "screen-256color";
+    extraConfig = ''
+      set -g escape-time 0
+
+      set -g history-limit 100000
+      set -g set-clipboard on
+
+      # Better copy mode
+      bind-key -T copy-mode-vi v send -X begin-selection
+      bind-key -T copy-mode-vi y send -X copy-selection-and-cancel
+    '';
   };
 
   programs.qutebrowser = {
@@ -87,10 +136,6 @@
       c.colors.webpage.darkmode.enabled = False
       c.colors.webpage.bg = "black"
     '';
-  };
-
-  programs.noctalia-shell = {
-    enable = true;
   };
 
   xdg.configFile."niri/config.kdl".source = ./dotfiles/niri.kdl;
