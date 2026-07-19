@@ -64,7 +64,12 @@
   # Define a user account.
   users.users.ruyam = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" "docker" ];
+    extraGroups = [
+      "wheel"
+      "networkmanager"
+      "dialout"
+      # "docker"
+    ];
   };
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
@@ -143,8 +148,7 @@
   };
 
   # Enable docker
-  virtualisation.docker.enable = true;
-
+  # virtualisation.docker.enable = true;
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];

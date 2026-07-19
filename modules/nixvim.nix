@@ -11,6 +11,8 @@
     vimAlias = true;
     viAlias = true;
 
+    colorscheme = "nightfox";
+
     luaLoader.enable = true;
 
     globals.mapleader = " ";
@@ -84,6 +86,21 @@
           svelte.enable = true;
           jsonls.enable = true;
           nixd.enable = true;
+          gopls.enable = true;
+        };
+      };
+
+      blink-cmp = {
+        enable = true;
+        settings = {
+          keymap = {
+            # Replaces complex mapping boilerplate with a single preset
+            preset = "super-tab"; 
+          };
+          completion = {
+            # Automatically show documentation window for the selected item
+            documentation.auto_show = true;
+          };
         };
       };
 
@@ -142,8 +159,6 @@
       "web-devicons".enable = false;
     };
 
-    # colorschemes.nightfox.enable = true;
-    colorschemes.rose-pine.enable = true;
-
+    colorschemes.nightfox.enable = true;
   };
 }

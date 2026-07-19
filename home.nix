@@ -33,13 +33,14 @@
     btop
     tree
     lazygit
-    hledger
     nodejs
 
     ripgrep
     platformio
 
-    telegram-desktop
+    hledger
+    hledger-ui
+    hledger-web
   ];
 
   programs.alacritty = {
@@ -102,7 +103,7 @@
     };
   };
 
-  programs.noctalia-shell = {
+  programs.noctalia = {
     enable = true;
   };
 
@@ -126,6 +127,11 @@
       # Better copy mode
       bind-key -T copy-mode-vi v send -X begin-selection
       bind-key -T copy-mode-vi y send -X copy-selection-and-cancel
+
+      # New Tmux Windows and Panes go to the same directory as the current pane
+      bind  c  new-window      -c "#{pane_current_path}"
+      bind  %  split-window -h -c "#{pane_current_path}"
+      bind '"' split-window -v -c "#{pane_current_path}"
     '';
   };
 
