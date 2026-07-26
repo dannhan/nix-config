@@ -31,10 +31,11 @@
         action = "<cmd>Telescope live_grep<CR>";
         options.silent = true;
       }
+
       {
         mode = "n";
         key = "<leader>e";
-        action = "<cmd>Explore<CR>";
+        action = "<cmd>Oil<CR>";
         options.silent = true;
       }
 
@@ -107,6 +108,10 @@
     };
 
     plugins = {
+      oil = {
+        enable = true;
+      };
+
       treesitter = {
         enable = true;
         settings.highlight.enable = true;
