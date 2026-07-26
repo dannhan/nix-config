@@ -2,13 +2,18 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-    ];
+  imports = [
+    # Include the results of the hardware scan.
+    ./hardware-configuration.nix
+  ];
 
   hardware.bluetooth.enable = true;
 
@@ -27,9 +32,11 @@
     hostName = "nixos"; # Define your hostname.
     networkmanager = {
       enable = true;
-      dns = "none";
     };
-    nameservers = ["1.1.1.1" "8.8.8.8" "9.9.9.9" ];
+    nameservers = [
+      "1.1.1.1"
+      "8.8.8.8"
+    ];
   };
 
   # Select internationalisation properties.
@@ -72,11 +79,20 @@
     ];
   };
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
-
-  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
-    "steam" "steam-original" "steam-runtime" "steam-run" "steam-unwrapped"
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
   ];
+
+  nixpkgs.config.allowUnfreePredicate =
+    pkg:
+    builtins.elem (lib.getName pkg) [
+      "steam"
+      "steam-original"
+      "steam-runtime"
+      "steam-run"
+      "steam-unwrapped"
+    ];
 
   # List packages installed in system profile.
   # You can use https://search.nixos.org/ to find more packages (and options).
@@ -103,15 +119,17 @@
     proggyfonts
     kode-mono
     jetbrains-mono
+
+    nerd-fonts._0xproto
   ];
 
   programs.niri.enable = true;
   programs.nix-ld.enable = true;
   programs.steam = {
-   enable = true;
-   remotePlay.openFirewall = true;
-   dedicatedServer.openFirewall = true;
-   localNetworkGameTransfers.openFirewall = true;
+    enable = true;
+    remotePlay.openFirewall = true;
+    dedicatedServer.openFirewall = true;
+    localNetworkGameTransfers.openFirewall = true;
   };
 
   programs.nix-ld.libraries = with pkgs; [
@@ -181,4 +199,3 @@
   system.stateVersion = "25.11"; # Did you read the comment?
 
 }
-

@@ -1,4 +1,10 @@
-{ inputs, config, pkgs, lib, ... }:
+{
+  inputs,
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 {
   imports = [
@@ -9,6 +15,12 @@
 
   home.username = "ruyam";
   home.homeDirectory = "/home/ruyam";
+  home.shellAliases = {
+    inbox = "nvim ${config.home.homeDirectory}/docs/working/inbox.md";
+  };
+  home.sessionVariables = {
+    GOPATH = "${config.home.homeDirectory}/.local/share/go";
+  };
 
   xdg.userDirs = {
     enable = true;
@@ -20,9 +32,9 @@
     documents = "${config.home.homeDirectory}/docs";
     pictures = "${config.home.homeDirectory}/media/pictures";
     videos = "${config.home.homeDirectory}/media/videos";
-    music = "${config.home.homeDirectory}/media/musics";
+    music = "${config.home.homeDirectory}/media/music";
 
-    # Note: Setting a directory to null will often "disable" it 
+    # Note: Setting a directory to null will often "disable" it
     # or prevent it from being created.
     publicShare = null;
     templates = null;
@@ -41,13 +53,20 @@
     hledger
     hledger-ui
     hledger-web
+
+    go
+    gopls
+    gotools
+
+    nixfmt-rfc-style
   ];
 
   programs.alacritty = {
     enable = true;
     settings = {
+      window.opacity = 0.90;
       font = {
-        normal.family = "Kode Mono";
+        normal.family = "0xProto Nerd Font";
         size = 12;
       };
     };
@@ -58,8 +77,18 @@
 
     historySize = 100000;
     historyFileSize = 100000;
-    historyControl = [ "ignoredups" "ignorespace" ];
-    historyIgnore = [ "clear" "pwd" "ls" "history" "exit" "cd *" ];
+    historyControl = [
+      "ignoredups"
+      "ignorespace"
+    ];
+    historyIgnore = [
+      "clear"
+      "pwd"
+      "ls"
+      "history"
+      "exit"
+      "cd *"
+    ];
 
     shellOptions = [ "histappend" ];
 
