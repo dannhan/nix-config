@@ -12,6 +12,7 @@
     viAlias = true;
 
     colorscheme = "nightfox";
+    globals.have_nerd_font = true;
 
     luaLoader.enable = true;
 
@@ -36,20 +37,53 @@
         action = "<cmd>Explore<CR>";
         options.silent = true;
       }
+
+      {
+        mode = "n";
+        key = "<leader>ca";
+        action = "<cmd>lua vim.lsp.buf.code_action()<CR>";
+        options.desc = "LSP Code Action (Extract/Inline)";
+      }
+      {
+        mode = "n";
+        key = "<leader>tt";
+        action = "<cmd>lua require('neotest').run.run()<CR>";
+        options.desc = "Run nearest test";
+      }
+      {
+        mode = "n";
+        key = "<leader>tf";
+        action = "<cmd>lua require('neotest').run.run(vim.fn.expand('%'))<CR>";
+        options.desc = "Run tests in file";
+      }
+      {
+        mode = "";
+        key = "<leader>f";
+        action.__raw = ''
+            function()
+            require('conform').format { async = true, lsp_fallback = true }
+          end
+        '';
+        options = {
+          desc = "[F]ormat buffer";
+        };
+      }
     ];
 
-    opts =  {
+    opts = {
       number = true;
       relativenumber = true;
       wrap = false;
       cursorline = true;
-      signcolumn ="yes";
+      signcolumn = "yes";
       showmode = false;
-      scrolloff = 8; sidescrolloff = 5;
+      scrolloff = 8;
+      sidescrolloff = 5;
 
       expandtab = true;
       shiftwidth = 2;
       tabstop = 4;
+      autoindent = true;
       smartindent = true;
 
       ignorecase = true;
@@ -88,14 +122,78 @@
           nixd.enable = true;
           gopls.enable = true;
         };
+        keymaps = {
+          lspBuf = {
+            "K" = "hover";
+            "gd" = "definition";
+            "gr" = "references";
+            "<leader>rn" = "rename";
+          };
+        };
+      };
+
+      conform-nvim = {
+        enable = true;
+        settings = {
+          format_on_save = {
+            lsp_format = "fallback";
+            timeout_ms = 1500;
+          };
+          formatters_by_ft = {
+            go = [
+              "goimports"
+              "gofmt"
+            ];
+            nix = [ "nixfmt" ];
+          };
+        };
+      };
+
+      neotest = {
+        enable = true;
+        adapters.go.enable = true;
       };
 
       blink-cmp = {
         enable = true;
         settings = {
           keymap = {
-            # Replaces complex mapping boilerplate with a single preset
-            preset = "super-tab"; 
+            # Disable the preset so it doesn't conflict with our manual bindings
+            preset = "none";
+
+            # Manually trigger the completion menu
+            "<C-space>" = [
+              "show"
+              "show_documentation"
+              "hide_documentation"
+            ];
+
+            # The Classic Vim Completion Bindings
+            "<C-n>" = [
+              "select_next"
+              "fallback"
+            ];
+            "<C-p>" = [
+              "select_prev"
+              "fallback"
+            ];
+            "<C-y>" = [ "select_and_accept" ];
+
+            # Cancel/Hide the completion menu
+            "<C-e>" = [
+              "hide"
+              "fallback"
+            ];
+
+            # Snippet navigation (since Tab is no longer doing this)
+            "<C-k>" = [
+              "snippet_forward"
+              "fallback"
+            ];
+            "<C-j>" = [
+              "snippet_backward"
+              "fallback"
+            ];
           };
           completion = {
             # Automatically show documentation window for the selected item
@@ -123,11 +221,11 @@
           floating_window_scaling_factor = 0.9;
         };
       };
-      
+
       telescope = {
         enable = true;
         extensions."fzf-native" = {
-          enable = true;          # enable fzf-native extension
+          enable = true; # enable fzf-native extension
           settings = {
             fuzzy = true;
             override_file_sorter = true;
@@ -137,7 +235,9 @@
         };
         settings = {
           defaults = {
-            layout_config = { prompt_position = "top"; };
+            layout_config = {
+              prompt_position = "top";
+            };
             sorting_strategy = "ascending";
           };
           pickers.find_files.hidden = true;
@@ -147,7 +247,10 @@
       "indent-blankline" = {
         enable = true;
         settings = {
-          indent = { char = "▏"; tab_char = "▏"; };
+          indent = {
+            char = "▏";
+            tab_char = "▏";
+          };
           scope = {
             enabled = true;
             show_start = true;
