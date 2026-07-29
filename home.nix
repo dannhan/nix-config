@@ -43,20 +43,22 @@
   # Packages that should be installed to the user profile.
   home.packages = with pkgs; [
     btop
-    tree
     lazygit
-    nodejs
-
     ripgrep
-    platformio
+    scrcpy
+    tree
+    wl-clipboard
 
     hledger
     hledger-ui
     hledger-web
 
+    android-tools
     go
     gopls
     gotools
+    nodejs
+    platformio
 
     nixfmt-rfc-style
   ];
