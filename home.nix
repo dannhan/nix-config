@@ -66,9 +66,10 @@
   programs.alacritty = {
     enable = true;
     settings = {
-      window.opacity = 0.90;
+      window.opacity = 0.95;
       font = {
-        normal.family = "0xProto Nerd Font";
+        # normal.family = "0xProto Nerd Font";
+        normal.family = "Kode Mono";
         size = 12;
       };
     };
