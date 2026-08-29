@@ -61,6 +61,10 @@
     platformio
 
     nixfmt-rfc-style
+
+    gh
+
+    gcc
   ];
 
   programs.alacritty = {

@@ -126,6 +126,7 @@
           jsonls.enable = true;
           nixd.enable = true;
           gopls.enable = true;
+          clangd.enable = true;
         };
         keymaps = {
           lspBuf = {
@@ -150,6 +151,7 @@
               "gofmt"
             ];
             nix = [ "nixfmt" ];
+            c = [ "clang-format" ];
           };
         };
       };
