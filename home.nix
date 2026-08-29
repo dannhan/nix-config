@@ -44,6 +44,7 @@
   home.packages = with pkgs; [
     btop
     lazygit
+    ranger
     ripgrep
     scrcpy
     tree
@@ -53,7 +54,10 @@
     hledger-ui
     hledger-web
 
+    libreoffice
+
     android-tools
+    gcc
     go
     gopls
     gotools
@@ -61,10 +65,6 @@
     platformio
 
     nixfmt-rfc-style
-
-    gh
-
-    gcc
   ];
 
   programs.alacritty = {
@@ -136,6 +136,13 @@
     settings = {
       user.name = "Ahmad Danun Hanani";
       user.email = "ahmadanun1@gmail.com";
+    };
+  };
+
+  programs.gh = {
+    enable = true;
+    gitCredentialHelper = {
+      enable = true;
     };
   };
 
