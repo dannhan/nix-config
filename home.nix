@@ -48,6 +48,7 @@
     ripgrep
     scrcpy
     tree
+    ueberzugpp
     wl-clipboard
 
     hledger
@@ -55,8 +56,10 @@
     hledger-web
 
     libreoffice
+    whatsapp-electron
 
     android-tools
+    bun
     gcc
     go
     gopls
@@ -146,12 +149,28 @@
     };
   };
 
+  programs.ghostty = {
+    enable = true;
+    settings = {
+      font-size = 14;
+      font-family = "Kode Mono";
+    };
+  };
+
   programs.noctalia = {
     enable = true;
   };
 
   programs.opencode = {
     enable = true;
+  };
+
+  programs.ranger = {
+    enable = true;
+    extraConfig = ''
+      set preview_images true
+      set preview_images_method ueberzug
+    '';
   };
 
   programs.tmux = {
@@ -166,6 +185,8 @@
 
       set -g history-limit 100000
       set -g set-clipboard on
+
+      set -g allow-passthrough on
 
       # Better copy mode
       bind-key -T copy-mode-vi v send -X begin-selection
@@ -188,6 +209,15 @@
   };
 
   xdg.configFile."niri/config.kdl".source = ./dotfiles/niri.kdl;
+
+  # TODO: might move it to a file
+  xdg.configFile."ueberzugpp/config.json".text = ''
+    {
+      "layer": {
+        "output": "kitty"
+      }
+    }
+  '';
 
   # This value determines the home Manager release that your
   # configuration is compatible with. This helps avoid breakage
