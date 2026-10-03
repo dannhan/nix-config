@@ -9,6 +9,7 @@
 {
   imports = [
     inputs.noctalia.homeModules.default
+    inputs.hermes-agent.homeManagerModules.default
 
     ./modules/nixvim.nix
   ];
@@ -69,6 +70,8 @@
 
     nixfmt-rfc-style
   ];
+
+  programs.hermes-agent.enable = true;
 
   programs.alacritty = {
     enable = true;
