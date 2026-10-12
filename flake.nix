@@ -20,6 +20,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     hermes-agent.url = "github:NousResearch/hermes-agent";
+    omp.url = "github:can1357/oh-my-pi";
   };
 
   outputs =

@@ -10,6 +10,7 @@
   imports = [
     inputs.noctalia.homeModules.default
     inputs.hermes-agent.homeManagerModules.default
+    inputs.omp.homeManagerModules.default
 
     ./modules/nixvim.nix
   ];
@@ -69,9 +70,18 @@
     platformio
 
     nixfmt-rfc-style
+
+    python3Packages.markitdown
+
+    codex
   ];
 
   programs.hermes-agent.enable = true;
+
+  programs.omp = {
+    enable = true;
+    settings.startup.quiet = true;
+  };
 
   programs.alacritty = {
     enable = true;
@@ -157,6 +167,7 @@
     settings = {
       font-size = 14;
       font-family = "Kode Mono";
+      background-opacity = 0.96;
     };
   };
 
