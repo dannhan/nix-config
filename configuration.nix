@@ -42,16 +42,10 @@
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
   console = {
-    # font = "ter-v32n";
+    font = "ter-v32n";
     keyMap = "us";
     # useXkbConfig = true; # use xkb.options in tty.
     packages = with pkgs; [ terminus_font ];
-  };
-
-  # Enable sddm
-  services = {
-    displayManager.sddm.enable = true;
-    displayManager.sddm.wayland.enable = true;
   };
 
   # Enable CUPS to print documents.
@@ -97,7 +91,6 @@
   # List packages installed in system profile.
   # You can use https://search.nixos.org/ to find more packages (and options).
   environment.systemPackages = with pkgs; [
-    neovim
     wget
     git
     tmux
@@ -163,6 +156,10 @@
 
     # Enable battery monitoring
     upower.enable = true;
+
+    # Enable sddm
+    displayManager.sddm.enable = true;
+    displayManager.sddm.wayland.enable = true;
   };
 
   # Enable docker
