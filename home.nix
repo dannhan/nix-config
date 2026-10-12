@@ -13,6 +13,9 @@
     inputs.omp.homeManagerModules.default
 
     ./modules/nixvim.nix
+    ./modules/ranger.nix
+    ./modules/qutebrowser.nix
+    ./modules/ueberzugpp.nix
   ];
 
   home.username = "ruyam";
@@ -152,6 +155,9 @@
     settings = {
       user.name = "Ahmad Danun Hanani";
       user.email = "ahmadanun1@gmail.com";
+      init.defaultBranch = "main";
+      push.autoSetupRemote = true;
+      pull.rebase = true;
     };
   };
 
@@ -179,23 +185,16 @@
     enable = true;
   };
 
-  programs.ranger = {
-    enable = true;
-    extraConfig = ''
-      set preview_images true
-      set preview_images_method ueberzug
-    '';
-  };
-
   programs.tmux = {
     enable = true;
     mouse = true;
     keyMode = "vi";
     baseIndex = 1;
 
-    terminal = "screen-256color";
+    terminal = "tmux-256color";
     extraConfig = ''
       set -g escape-time 0
+      set -ga terminal-overrides ",*:Tc"
 
       set -g history-limit 100000
       set -g set-clipboard on
@@ -213,25 +212,7 @@
     '';
   };
 
-  programs.qutebrowser = {
-    enable = true;
-    extraConfig = ''
-      c.colors.webpage.preferred_color_scheme = "dark"
-      c.colors.webpage.darkmode.enabled = False
-      c.colors.webpage.bg = "black"
-    '';
-  };
-
   xdg.configFile."niri/config.kdl".source = ./dotfiles/niri.kdl;
-
-  # TODO: might move it to a file
-  xdg.configFile."ueberzugpp/config.json".text = ''
-    {
-      "layer": {
-        "output": "kitty"
-      }
-    }
-  '';
 
   # This value determines the home Manager release that your
   # configuration is compatible with. This helps avoid breakage
