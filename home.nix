@@ -25,6 +25,7 @@
   };
   home.sessionVariables = {
     GOPATH = "${config.home.homeDirectory}/.local/share/go";
+    LEDGER_FILE = "${config.home.homeDirectory}/docs/finance/ledger.journal";
   };
 
   xdg.userDirs = {
