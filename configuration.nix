@@ -19,6 +19,9 @@
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
+  # Keep only the 5 newest generations' kernels/initrds on the 296M ESP.
+  # Without a limit the installer keeps every generation and /boot fills up.
+  boot.loader.systemd-boot.configurationLimit = 5;
   boot.loader.efi.canTouchEfiVariables = true;
 
   # Set your time zone.
@@ -96,7 +99,9 @@
     tmux
 
     home-manager
-    niri
+    # niri is not listed here: `programs.niri` below installs the wrapped
+    # package. Adding plain `pkgs.niri` too would put a second, unwrapped
+    # `bin/niri-session` in the system profile.
     xwayland-satellite
   ];
 
@@ -117,6 +122,40 @@
   ];
 
   programs.niri.enable = true;
+  # niri's session script runs `systemctl --user import-environment` with no
+  # variable list. systemd >= 256 deprecates that and writes
+  # "Calling import-environment without a list of variable names is deprecated."
+  # straight to the raw VT on every login, flashing over the greeter hand-off
+  # (upstream niri-wm/niri#254, still open). Wrap the package to pass the names
+  # explicitly, the same way niri-session's own dinit branch does, so the whole
+  # login-manager environment still reaches the systemd user manager.
+  #
+  # symlinkJoin, not overrideAttrs: only the tiny niri-session shell script
+  # changes, so niri itself is not rebuilt. providedSessions is preserved
+  # because `services.displayManager.sessionPackages` requires it and the
+  # default session is validated against it.
+  programs.niri.package =
+    let
+      niri = pkgs.niri;
+      importLoginEnvironment = lib.escapeShellArg (
+        "awk 'BEGIN{for(v in ENVIRON) if (v != \"AWKPATH\" && v != \"AWKLIBPATH\") print v}' 2>/dev/null"
+        + " | xargs -r systemctl --user import-environment"
+      );
+    in
+    pkgs.symlinkJoin {
+      pname = "${niri.pname}-session-env";
+      inherit (niri) version;
+      paths = [ niri ];
+      passthru = niri.passthru // {
+        unwrapped = niri;
+      };
+      postBuild = ''
+        rm "$out/bin/niri-session"
+        cp -p "${niri}/bin/niri-session" "$out/bin/niri-session"
+        substituteInPlace "$out/bin/niri-session" \
+          --replace-fail 'systemctl --user import-environment' ${importLoginEnvironment}
+      '';
+    };
   programs.nix-ld.enable = true;
   programs.steam = {
     enable = true;
@@ -157,9 +196,21 @@
     # Enable battery monitoring
     upower.enable = true;
 
-    # Enable sddm
-    displayManager.sddm.enable = true;
-    displayManager.sddm.wayland.enable = true;
+    # Wayland login screen: Noctalia Greeter (greetd-based), replacing SDDM.
+    # The module installs the greeter and enables greetd, Polkit and
+    # AccountsService. Do NOT enable another display manager (e.g. SDDM)
+    # alongside it, or both will fight over the login screen.
+    displayManager.noctalia-greeter = {
+      enable = true;
+      # Allow this user to push the session's appearance (wallpaper, palette,
+      # theme, font, layout) to the greeter without an admin prompt. Then use
+      # Noctalia: Settings -> Security -> Noctalia Greeter -> Sync Now.
+      passwordlessSyncUsers = [ "ruyam" ];
+      settings = {
+        cursor.size = 24;
+        keyboard.layout = "us";
+      };
+    };
   };
 
   # Enable docker

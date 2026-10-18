@@ -266,7 +266,7 @@
         };
       };
 
-      "web-devicons".enable = false;
+      "web-devicons".enable = true;
     };
 
     colorschemes.nightfox.enable = true;
