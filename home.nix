@@ -31,6 +31,11 @@ in
   home.shellAliases = {
     inbox = "nvim ${config.home.homeDirectory}/docs/working/inbox.md";
   };
+  home.sessionPath = [
+    "${config.home.homeDirectory}/.local/bin"
+    "${config.home.homeDirectory}/.local/share/go/bin"
+    "${config.home.homeDirectory}/.opencode/bin"
+  ];
   home.sessionVariables = {
     GOPATH = "${config.home.homeDirectory}/.local/share/go";
     LEDGER_FILE = "${config.home.homeDirectory}/docs/finance/ledger.journal";
@@ -220,6 +225,10 @@ in
   programs.ghostty = {
     enable = true;
     settings = {
+      # Login shell so ~/.profile is read: home-manager's sessionPath and
+      # sessionVariables (GOPATH, TERMINAL, ...) only export there, and a
+      # plain interactive bash never sources it.
+      command = "bash -l";
       font-size = 14;
       font-family = "Kode Mono";
       background-opacity = 0.96;
@@ -227,10 +236,6 @@ in
       # ~/.config/ghostty/themes/noctalia.
       theme = "noctalia";
     };
-  };
-
-  programs.opencode = {
-    enable = true;
   };
 
   programs.tmux = {
