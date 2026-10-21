@@ -170,6 +170,18 @@
     openssl
   ];
 
+  # AppImages (e.g. `pane`) self-mount via libfuse.so.2, which outside the
+  # Nix store is nowhere a bare binary can dlopen() it. `enable` installs
+  # appimage-run (an FHS env that does provide libfuse) and programs.fuse
+  # (SUID fusermount wrappers + /etc/fuse.conf); `binfmt` registers
+  # appimage-run as a kernel interpreter matched on AppImage magic bytes, so
+  # executing an AppImage directly is transparently rerun inside that env
+  # instead of its own runtime dying on the missing libfuse.
+  programs.appimage = {
+    enable = true;
+    binfmt = true;
+  };
+
   xdg.portal = {
     enable = true;
     xdgOpenUsePortal = true;
