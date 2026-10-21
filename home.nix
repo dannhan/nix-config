@@ -243,6 +243,7 @@ in
     mouse = true;
     keyMode = "vi";
     baseIndex = 1;
+    focusEvents = true;
 
     terminal = "tmux-256color";
     extraConfig = ''
@@ -253,6 +254,8 @@ in
       set -g set-clipboard on
 
       set -g allow-passthrough on
+      # OpenTUI/OpenCode inside tmux: Ghostty speaks OSC 777
+      set-environment -g OPENTUI_NOTIFICATION_PROTOCOL osc777
 
       # Better copy mode
       bind-key -T copy-mode-vi v send -X begin-selection
