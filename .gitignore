@@ -1,0 +1,6 @@
+# sops-nix age key (never commit private keys)
+# The public key lives in .sops.yaml and IS committed.
+.age.key
+
+# Unencrypted secrets (sops encrypts secrets.yaml in-place)
+secrets.yaml.plain

@@ -15,6 +15,20 @@
     ./hardware-configuration.nix
   ];
 
+  # sops-nix: decrypt secrets at activation (every boot and every
+  # `nixos-rebuild switch`) into /run/secrets/*, which lives in RAM. Nothing
+  # decrypted ever reaches the Nix store. The age key file must exist on the
+  # host; without it the secrets cannot be unlocked.
+  sops = {
+    defaultSopsFile = ./secrets.yaml;
+    defaultSopsFormat = "yaml";
+    age.keyFile = "/home/ruyam/.config/sops/age/keys.txt";
+
+    # The secret value is already KEY=VALUE, so the file can go straight
+    # to NetworkManager. No template needed.
+    secrets."eduroam-env" = { };
+  };
+
   hardware.bluetooth.enable = true;
 
   # Use the systemd-boot EFI boot loader.
@@ -35,6 +49,35 @@
     hostName = "nixos"; # Define your hostname.
     networkmanager = {
       enable = true;
+      ensureProfiles = {
+        environmentFiles = [ config.sops.secrets."eduroam-env".path ];
+        profiles.eduroam = {
+          connection = {
+            id = "eduroam";
+            type = "wifi";
+          };
+          wifi = {
+            mode = "infrastructure";
+            ssid = "eduroam";
+          };
+          wifi-security = {
+            key-mgmt = "wpa-eap";
+          };
+          "802-1x" = {
+            eap = "peap;";
+            identity = "$EDUROAM_IDENTITY";
+            password = "$EDUROAM_PASSWORD";
+            phase2-auth = "mschapv2";
+            phase1-auth-flags = "8";
+          };
+          ipv4 = {
+            method = "auto";
+          };
+          ipv6 = {
+            method = "auto";
+          };
+        };
+      };
     };
     nameservers = [
       "1.1.1.1"
@@ -103,6 +146,10 @@
     # package. Adding plain `pkgs.niri` too would put a second, unwrapped
     # `bin/niri-session` in the system profile.
     xwayland-satellite
+
+    # Secrets management (sops encrypts/decrypts, age provides the keypair)
+    sops
+    age
   ];
 
   fonts.packages = with pkgs; [

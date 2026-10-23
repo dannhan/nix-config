@@ -1,0 +1,10 @@
+# sops-nix configuration
+# Replace the age public key below with your own.
+# Generate one with: age-keygen -o ~/.config/sops/age/keys.txt
+# Then extract the public key from the output (the "public key:" line).
+keys:
+  - &primary age1a4huaf7kgaz4jptdh4kq3qqdcclcu27kfzpcku5gq5ewp5d0sf7sgac65z
+creation_rules:
+  - path_regex: secrets\.yaml$
+    age: >-
+      age1a4huaf7kgaz4jptdh4kq3qqdcclcu27kfzpcku5gq5ewp5d0sf7sgac65z
