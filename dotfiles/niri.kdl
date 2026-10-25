@@ -74,7 +74,7 @@ layout {
 
     // You can change how the focus ring looks.
     focus-ring {
-        width 2
+        width 1.5
 
         // Color of the ring on the active monitor.
         active-color "#424056"
@@ -177,6 +177,15 @@ window-rule {
 window-rule {
     geometry-corner-radius 6
     clip-to-geometry true
+}
+
+window-rule {
+    match app-id=r#"^com\.mitchellh\.ghostty$"#
+
+    background-effect {
+        blur true
+        xray false
+    }
 }
 
 binds {
