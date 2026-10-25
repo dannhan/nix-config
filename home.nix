@@ -69,7 +69,9 @@ in
 
   # Packages that should be installed to the user profile.
   home.packages = with pkgs; [
+    brave
     btop
+    chromium
     ffmpeg
     lazygit
     libnotify
@@ -184,6 +186,7 @@ in
 
   programs.firefox = {
     enable = true;
+    configPath = "${config.xdg.configHome}/mozilla/firefox";
     profiles.default = {
       id = 0;
       settings = {
