@@ -11,7 +11,6 @@
     vimAlias = true;
     viAlias = true;
 
-    colorscheme = "nightfox";
     globals.have_nerd_font = true;
 
     luaLoader.enable = true;
@@ -269,6 +268,31 @@
       "web-devicons".enable = true;
     };
 
-    colorschemes.nightfox.enable = true;
+    colorschemes.nightfox = {
+      enable = true;
+      # Flavours: carbonfox, dawnfox, dayfox, duskfox, nightfox, nordfox, terafox.
+      # The module emits `colorscheme <flavor>` itself, so there is no separate
+      # top-level `colorscheme` option any more.
+      flavor = "nordfox";
+      # Transparent Normal/NormalNC/WinBar so the terminal's background (and the
+      # compositor blur behind it) shows through NeoVim.
+      settings.options.transparent = true;
+    };
+
+    # Nightfox keeps these opaque even with transparent = true.
+    extraConfigLua = ''
+      for _, g in ipairs({
+        "NormalFloat",
+        "FloatBorder",
+        "CursorLine",
+        "StatusLine",
+        "StatusLineNC",
+        "WinSeparator",
+      }) do
+        local hl = vim.api.nvim_get_hl(0, { name = g, link = false })
+        hl.bg = nil
+        vim.api.nvim_set_hl(0, g, hl)
+      end
+    '';
   };
 }

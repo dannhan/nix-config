@@ -231,7 +231,10 @@ in
       command = "bash -l";
       font-size = 14;
       font-family = "Kode Mono";
-      background-opacity = 0.96;
+      background-opacity = 0.888;
+      # Let explicit cell background colours (e.g. Neovim highlights, tmux panes)
+      # share the window's opacity, so the compositor blur shows through them.
+      background-opacity-cells = true;
       # Follow the wallpaper-derived palette that Noctalia writes to
       # ~/.config/ghostty/themes/noctalia.
       theme = "noctalia";
