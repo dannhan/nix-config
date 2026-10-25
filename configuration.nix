@@ -115,7 +115,7 @@
       "wheel"
       "networkmanager"
       "dialout"
-      # "docker"
+      "docker"
     ];
   };
 
@@ -132,6 +132,7 @@
       "steam-runtime"
       "steam-run"
       "steam-unwrapped"
+      "obsidian"
     ];
 
   # List packages installed in system profile.
@@ -150,6 +151,8 @@
     # Secrets management (sops encrypts/decrypts, age provides the keypair)
     sops
     age
+
+    obsidian
   ];
 
   fonts.packages = with pkgs; [
@@ -273,7 +276,7 @@
   };
 
   # Enable docker
-  # virtualisation.docker.enable = true;
+  virtualisation.docker.enable = true;
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
