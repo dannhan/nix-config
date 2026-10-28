@@ -31,6 +31,18 @@
 
   hardware.bluetooth.enable = true;
 
+  # Hardware video decode: VA-API + the iHD driver for 11th-gen Iris Xe.
+  # Without intel-media-driver, browsers fall back to CPU decoding
+  # (Firefox's RDD Process pegged ~340% CPU on 4K YouTube; load > 6 on 4 cores).
+  hardware.graphics = {
+    enable = true;
+    extraPackages = with pkgs; [
+      intel-media-driver # the missing iHD_drv_video.so
+      libva-utils        # vainfo — verification
+      intel-gpu-tools    # intel_gpu_top — watch the Video engine work
+    ];
+  };
+
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   # Keep only the 5 newest generations' kernels/initrds on the 296M ESP.
