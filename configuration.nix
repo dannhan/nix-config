@@ -13,6 +13,17 @@
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
+
+    # NVIDIA PRIME render-offload for games (GeForce MX450). The desktop stays on
+    # the Intel Iris Xe; games run heavier on the dGPU via `nvidia-offload`.
+    # Flip enable to false (or drop this line) to revert to nouveau/iGPU-only.
+    (
+      { ... }:
+      {
+        imports = [ ./modules/nvidia-offload.nix ];
+        services.nvidia-offload-gaming.enable = true;
+      }
+    )
   ];
 
   # sops-nix: decrypt secrets at activation (every boot and every
@@ -145,6 +156,10 @@
       "steam-run"
       "steam-unwrapped"
       "obsidian"
+      # NVIDIA PRIME offload (modules/nvidia-offload.nix)
+      "nvidia-x11"
+      "nvidia-settings"
+      "nvidia-persistenced"
     ];
 
   # List packages installed in system profile.

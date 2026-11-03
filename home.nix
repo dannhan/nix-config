@@ -41,6 +41,22 @@ in
     LEDGER_FILE = "${config.home.homeDirectory}/docs/finance/ledger.journal";
     TERMINAL = "ghostty";
   };
+  # Capitaine cursor theme: without a real theme installed, apps fall back to
+  # a minimal built-in arrow and never show hand/wait/resize cursors.
+  home.pointerCursor = {
+    name = "capitaine-cursors";
+    package = pkgs.capitaine-cursors;
+    size = 24;
+    gtk.enable = true;
+  };
+
+  gtk = {
+    enable = true;
+    iconTheme = {
+      name = "Papirus-Dark";
+      package = pkgs.papirus-icon-theme;
+    };
+  };
 
   xdg.userDirs = {
     enable = true;
@@ -75,12 +91,15 @@ in
     ffmpeg
     lazygit
     libnotify
+    nautilus
     ranger
     ripgrep
     scrcpy
+    qbittorrent
     tree
     ueberzugpp
     wl-clipboard
+    yazi
 
     hledger
     hledger-ui
@@ -233,7 +252,12 @@ in
       # plain interactive bash never sources it.
       command = "bash -l";
       font-size = 14;
-      font-family = "Kode Mono";
+      font-family = [
+        "Kode Mono"
+        # Fallback for Nerd Font glyphs (tmux status-bar icons, nvim
+        # devicons); Kode Mono itself has none.
+        "0xProto Nerd Font Mono"
+      ];
       background-opacity = 0.888;
       # Let explicit cell background colours (e.g. Neovim highlights, tmux panes)
       # share the window's opacity, so the compositor blur shows through them.
@@ -262,6 +286,38 @@ in
       set -g allow-passthrough on
       # OpenTUI/OpenCode inside tmux: Ghostty speaks OSC 777
       set-environment -g OPENTUI_NOTIFICATION_PROTOCOL osc777
+
+      # Minimal status line (binoymanoj/tmux-minimal-theme style), tinted by
+      # the Noctalia palette: the ghostty palette itself is themed by
+      # Noctalia, so ANSI indices (colourN) and "default" follow wallpaper
+      # changes automatically.
+      set -g status-position top
+      set -g status-interval 3
+      set -g status-justify left
+      set -g status-style "bg=default,fg=default"
+      set -g status-left-length 100
+      set -g status-right-length 100
+
+      set -g pane-border-style "fg=colour8"
+      set -g pane-active-border-style "fg=colour4"
+
+      set -g message-style "bg=default,fg=default,bold"
+      set -g message-command-style "bg=default,fg=default,bold"
+
+      set -g window-status-format "#[fg=colour8,bg=default] #I:#W "
+      set -g window-status-current-format "#[fg=colour4,bg=default,bold] #I:#W "
+      set -g window-status-separator ""
+
+      set -g status-left "#[fg=colour4,bold]  #S #[fg=colour8]│ "
+      set -g status-right "#[fg=colour4]  #[fg=default]#(echo \"#{pane_current_path}\" | awk -v h=\"$HOME\" '{p=$0;sub(\"^\"h\"/\",\"~/\",p);if(p==h)p=\"~\";n=split(p,a,\"/\");out=\"\";for(i=2;i<=n;i++)out=out\"/\"(i==n?a[i]:substr(a[i],1,1));print a[1] out}') #[fg=colour8]│ #[fg=colour4] #[fg=default]#(free | awk '/^Mem/ { printf(\"%.0f%%\", $3/$2 * 100 - 0.5) }') "
+
+      set -g mode-style "bg=colour4,fg=default"
+      set -g clock-mode-colour "colour4"
+      set -g clock-mode-style 24
+
+      # Keep the status area single-row (the black-bar/separator-row variant
+      # was reverted; reset explicitly so live reloads don't stay at 2).
+      set -g status on
 
       # Better copy mode
       bind-key -T copy-mode-vi v send -X begin-selection

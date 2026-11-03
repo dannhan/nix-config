@@ -77,6 +77,7 @@
       cursorline = true;
       signcolumn = "yes";
       showmode = false;
+      laststatus = 3;
       scrolloff = 8;
       sidescrolloff = 5;
 
@@ -265,7 +266,65 @@
         };
       };
 
+      mini = {
+        enable = true;
+        modules = {
+          statusline = {
+            use_icons = true;
+          };
+        };
+      };
+
       "web-devicons".enable = true;
+
+      which-key = {
+        enable = true;
+        settings = {
+          plugins = {
+            marks = true;
+            registers = true;
+            spelling = {
+              enabled = true;
+              suggestions = 20;
+            };
+            presets = {
+              operators = false;
+              motions = false;
+              windows = false;
+              nav = false;
+              z = false;
+              g = false;
+            };
+          };
+          icons = {
+            breadcrumb = "»";
+            separator = "➜";
+            group = "+";
+          };
+          win = {
+            border = "rounded";
+            padding = [
+              2
+              2
+              2
+              2
+            ];
+          };
+          layout = {
+            height = {
+              min = 4;
+              max = 25;
+            };
+            width = {
+              min = 20;
+              max = 50;
+            };
+            spacing = 4;
+            align = "left";
+          };
+          show_help = true;
+        };
+      };
     };
 
     colorschemes.nightfox = {
@@ -292,6 +351,24 @@
         local hl = vim.api.nvim_get_hl(0, { name = g, link = false })
         hl.bg = nil
         vim.api.nvim_set_hl(0, g, hl)
+      end
+
+      -- Which-key group registrations
+      local wk_ok, wk = pcall(require, "which-key")
+      if wk_ok then
+        wk.add({
+          -- Hide clutter
+          { "<leader><leader>", hidden = true },
+
+          -- Groups
+          { "<leader>s", group = "Search" },
+          { "<leader>t", group = "Test" },
+          { "<leader>c", group = "Code/LSP" },
+          { "<leader>f", group = "Format" },
+          { "<leader>g", group = "Git" },
+          { "<leader>b", group = "Buffer" },
+          { "<leader>a", group = "Actions" },
+        })
       end
     '';
   };
